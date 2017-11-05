@@ -78,7 +78,7 @@ def getFlattenedDischargeDispositionId(dischargeDispositionId):
 
 
 def getFlattenedAdmissionSourceId(admissionSourceId):
-    flattened = [0] *25
+    flattened = [0] *26
     flattened[int(admissionSourceId)] = 1
     return flattened
 
@@ -145,7 +145,20 @@ def getFlattenedGlucoseSerum(maxGluSerum):
         flattened[3] = 1
     return flattened
 
+'''
 
+'''
+def getFlattenedReadmitted(readmitted):
+    if readmitted == '<30':
+        index = 0
+    elif readmitted == '>30':
+        index = 1
+    else:
+        index = 2
+
+    flattened = [0]*3
+    flattened[index] = 1
+    return flattened
 
 
 def getFlattenedDischargeDispositionIdColumnNames():
@@ -165,7 +178,7 @@ def getFlattenedDischargeDispositionIdColumnNames():
             'isDischarged/transferred to a Critical Access Hospital (CAH).']
 
 
-def getFlattenedAdmissionTypeIdColumnNames():
+def getFlattenedAdmissionSourceTypeIdColumnNames():
     return ['PhysicianReferral','ClinicReferral','HMOReferral','Transferfromahospital',
             'TransferfromaSkilledNursingFacility(SNF)','Transferfromanotherhealthcarefacility','EmergencyRoom',
             'Court/LawEnforcement','NotAvailable','Transferfromcritialaccesshospital','NormalDelivery','PrematureDelivery',
@@ -197,10 +210,9 @@ def getHeaders():
     header.extend(['isCaucasian', 'isAsian', 'isAfrican', 'isAmerican', 'isHispanic', 'isOther'])
     header.extend(['isMale', 'isFemale', 'isUnknown'])
     header.extend(['is0', 'is10', 'is20', 'is30', 'is40', 'is50', 'is60', 'is70', 'is80', 'is90'])
-    header.append('weight')
     header.extend(['isEmergency','isUrgent','isElective','isNewborn','isNot Available','isNULL','isTrauma Center','isNot Mapped', 'None'])
-    header.append(getFlattenedDischargeDispositionIdColumnNames())
-    header.append(getFlattenedAdmissionTypeIdColumnNames())
+    header.extend(getFlattenedDischargeDispositionIdColumnNames())
+    header.extend(getFlattenedAdmissionSourceTypeIdColumnNames())
     header.append('time_in_hospital')
     header.append('medical_specialty')
     header.append('num_lab_procedures')
@@ -209,9 +221,9 @@ def getHeaders():
     header.append('number_outpatient')
     header.append('number_emergency')
     header.append('number_inpatient')
-    header.append(getFlattenedDiag1Columns())
-    header.append(getFlattenedDiag2Columns())
-    header.append(getFlattenedDiag3Columns())
+    header.extend(getFlattenedDiag1Columns())
+    header.extend(getFlattenedDiag2Columns())
+    header.extend(getFlattenedDiag3Columns())
     header.append('number_diagnoses')
     header.extend(['is>200', 'is>300', 'isNormal', 'isNone'])
     header.append('A1Cresult')
@@ -240,19 +252,18 @@ def getHeaders():
     header.append('metformin-pioglitazone')
     header.append('change')
     header.append('diabetesMed')
-    header.append('readmitted')
+    header.extend(['is<30', 'is>30', 'isNo'])
     return header
 
 def writeToFile(allFlattenedRows):
     df = pd.DataFrame(allFlattenedRows)
-    df.to_csv('flattened.csv', index=False, header=False)
+    df.to_csv('flattened.csv', mode='a', index=False, header=False)
 
 def flatten_csv(filePath):
     df = pd.read_csv(filePath, sep=',',header=0)
     allFlattenedRows = []
     allFlattenedRows.append(getHeaders())
-    print(getHeaders())
-    return
+
     for index, dataRow in df.iterrows():
         flattenedRow = []
         flattenedRow.append(dataRow['encounter_id'])
@@ -276,33 +287,33 @@ def flatten_csv(filePath):
         flattenedRow.append(dataRow['number_diagnoses'])
         flattenedRow.extend(getFlattenedGlucoseSerum(dataRow['max_glu_serum']))
         flattenedRow.append('0' if dataRow['A1Cresult'] == 'none' else '1')
-        flattenedRow.append(dataRow['metformin'])
-        flattenedRow.append(dataRow['repaglinide'])
-        flattenedRow.append(dataRow['nateglinide'])
-        flattenedRow.append(dataRow['chlorpropamide'])
-        flattenedRow.append(dataRow['glimepiride'])
-        flattenedRow.append(dataRow['acetohexamide'])
-        flattenedRow.append(dataRow['glipizide'])
-        flattenedRow.append(dataRow['glyburide'])
-        flattenedRow.append(dataRow['tolbutamide'])
-        flattenedRow.append(dataRow['pioglitazone'])
-        flattenedRow.append(dataRow['rosiglitazone'])
-        flattenedRow.append(dataRow['acarbose'])
-        flattenedRow.append(dataRow['miglitol'])
-        flattenedRow.append(dataRow['troglitazone'])
-        flattenedRow.append(dataRow['tolazamide'])
-        flattenedRow.append(dataRow['examide'])
-        flattenedRow.append(dataRow['citoglipton'])
-        flattenedRow.append(dataRow['insulin'])
-        flattenedRow.append(dataRow['glyburide-metformin'])
-        flattenedRow.append(dataRow['glipizide-metformin'])
-        flattenedRow.append(dataRow['glimepiride-pioglitazone'])
-        flattenedRow.append(dataRow['metformin-rosiglitazone'])
-        flattenedRow.append(dataRow['metformin-pioglitazone'])
+        flattenedRow.append('0' if dataRow['metformin'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['repaglinide'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['nateglinide'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['chlorpropamide'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['glimepiride'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['acetohexamide'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['glipizide'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['glyburide'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['tolbutamide'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['pioglitazone'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['rosiglitazone'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['acarbose'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['miglitol'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['troglitazone'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['tolazamide'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['examide'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['citoglipton'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['insulin'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['glyburide-metformin'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['glipizide-metformin'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['glimepiride-pioglitazone'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['metformin-rosiglitazone'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['metformin-pioglitazone'] == 'No' else '1')
 
-        flattenedRow.append(dataRow['change'])
-        flattenedRow.append(dataRow['diabetesMed'])
-        flattenedRow.append(dataRow['readmitted'])
+        flattenedRow.append('0' if dataRow['change'] == 'No' else '1')
+        flattenedRow.append('0' if dataRow['diabetesMed'] == 'No' else '1')
+        flattenedRow.extend(getFlattenedReadmitted(dataRow['readmitted']))
 
         allFlattenedRows.append(flattenedRow)
 
