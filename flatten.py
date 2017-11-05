@@ -66,102 +66,72 @@ Trauma Center
 Not Mapped
 '''
 def getFlattenedAdmissionTypeId(admissionTypeId):
-    flattened = [0]*8
-    index = {'Emergency': 0,
-             'Urgent': 1,
-             'Elective': 2,
-             'Newborn': 3,
-             'Not Available': 4,
-             'NULL': 5,
-             'Trauma Center': 6,
-             'Not Mapped': 7}[admissionTypeId]
-    flattened[index] = 1
+    flattened = [0]*9
+    flattened[int(admissionTypeId)] = 1
     return flattened
 
 #TODO
 def getFlattenedDischargeDispositionId(dischargeDispositionId):
-    index = {'Discharged to home':0,
-             'Discharged/transferred to another short term hospital':1,
-             'Discharged/transferred to SNF':2,
-             'Discharged/transferred to ICF':3,
-             'Discharged/transferred to another type of inpatient care institution':4,
-             'Discharged/transferred to home with home health service':5,
-             'Left AMA':6,
-             'Discharged/transferred to home under care of Home IV provider':7,
-             'Admitted as an inpatient to this hospital':8,
-             'Neonate discharged to another hospital for neonatal aftercare':9,
-             'Expired':10,
-             'Still patient or expected to return for outpatient services':11,
-             'Hospice / home':12,
-             'Hospice / medical facility':13,
-             'Discharged/transferred within this institution to Medicare approved swing bed':14,
-             'Discharged/transferred/referred another institution for outpatient services':15,
-             'Discharged/transferred/referred to this institution for outpatient services':16,
-             'NULL':17,
-             'Expired at home. Medicaid only, hospice.':18,
-             'Expired in a medical facility. Medicaid only, hospice.':19,
-             'Expired, place unknown. Medicaid only, hospice.':20,
-             'Discharged/transferred to another rehab fac including rehab units of a hospital .':21,
-             'Discharged/transferred to a long term care hospital.':22,
-             'Discharged/transferred to a nursing facility certified under Medicaid but not certified under Medicare.':23,
-             'Not Mapped':24,
-             'Unknown/Invalid':25,
-             'Discharged/transferred to another Type of Health Care Institution not Defined Elsewhere':26,
-             'Discharged/transferred to a federal health care facility.':27,
-             'Discharged/transferred/referred to a psychiatric hospital of psychiatric distinct part unit of a hospital':28,
-             'Discharged/transferred to a Critical Access Hospital (CAH).':29}[dischargeDispositionId]
-        flattened = [0]*30
-        flattened[index] = 1
-        return flattened
+    flattened = [0]*30
+    flattened[int(dischargeDispositionId)] = 1
+    return flattened
 
 
 def getFlattenedAdmissionSourceId(admissionSourceId):
-    index = {'PhysicianReferral':0,
-             'ClinicReferral':1,
-             'HMOReferral':2,
-             'Transferfromahospital':3,
-             'TransferfromaSkilledNursingFacility(SNF)':4,
-             'Transferfromanotherhealthcarefacility':5,
-             'EmergencyRoom':6,
-             'Court/LawEnforcement':7,
-             'NotAvailable':8,
-             'Transferfromcritialaccesshospital':9,
-             'NormalDelivery':10,
-             'PrematureDelivery':11,
-             'SickBaby':12,
-             'ExtramuralBirth':13,
-             'NotAvailable':14,
-             'NULL':15,
-             'TransferFromAnotherHomeHealthAgency':16,
-             'ReadmissiontoSameHomeHealthAgency':17,
-             'NotMapped':18,
-             'Unknown/Invalid':19,
-             'Transferfromhospitalinpt/samefacresltinasepclaim':20,
-             'Borninsidethishospital':21,
-             'Bornoutsidethishospital':22,
-             'TransferfromAmbulatorySurgeryCenter':23,
-             'TransferfromHospice':24}[admissionSourceId]
     flattened = [0] *25
-    flattened[index] = 1
+    flattened[int(admissionSourceId)] = 1
     return flattened
 
 
+'''
+Circulatory
+Respiratory
+Digestive
+Diabetes
+Injury
+Musculoskeletal
+Genitourinary
+Neoplasms
+Other
+'''
 def getFlattenedDiag1(diag1):
-    flattened = [0]*8
+    if diag1.isdigit() == False:
+        index = 8
+    else:
+        diag = int(float(diag1))
+
+        if ((diag >= 390 and diag <= 459) or diag == 785):
+            index = 0
+        elif ((diag >= 460 and diag <= 519) or diag == 786):
+            index = 1
+        elif ((diag >= 520 and diag <= 579) or diag == 787):
+            index = 2
+        elif (diag == 250):
+            index = 3
+        elif (diag >= 800 and diag <= 999):
+            index = 4
+        elif (diag >= 710 and diag <= 739):
+            index = 5
+        elif ((diag >= 580 and diag <= 629) or diag == 788):
+            index = 6
+        elif ((diag >= 140 and diag <= 239) or (diag >= 790 and diag <= 799) or (diag >= 680 and diag <= 709) or
+              (diag >= 1 and diag <= 139) or diag in [782, 780, 781, 784]):
+            index = 7
+        else:
+            index = 8
+
+    flattened = [0]*9
+    flattened[index] = 1
 
     return flattened
 
 
 def getFlattenedDiag2(diag2):
-    flattened = [0]*8
-
-    return flattened
+    return getFlattenedDiag1(diag2)
 
 
-def getFlattenedDiag2(diag2):
-    flattened = [0]*8
-
-    return flattened
+def getFlattenedDiag2(diag3):
+    return getFlattenedDiag1(diag3)
 
 def getFlattenedGlucoseSerum(maxGluSerum):
     flattened = [0]*4
@@ -204,6 +174,22 @@ def getFlattenedAdmissionTypeIdColumnNames():
             'TransferfromAmbulatorySurgeryCenter','TransferfromHospice']
 
 
+def getFlattenedDiag1Columns():
+    return ['isDiag1Circulatory','isDiag1Respiratory','isDiag1Digestive','isDiag1Diabetes',
+            'isDiag1Injury','isDiag1Musculoskeletal','isDiag1Genitourinary','isDiag1Neoplasms',
+            'isDiag1Other']
+
+def getFlattenedDiag2Columns():
+    return ['isDiag2Circulatory','isDiag2Respiratory','isDiag2Digestive','isDiag2Diabetes',
+            'isDiag2Injury','isDiag2Musculoskeletal','isDiag2Genitourinary','isDiag2Neoplasms',
+            'isDiag2Other']
+
+def getFlattenedDiag3Columns():
+    return ['isDiag2Circulatory','isDiag2Respiratory','isDiag2Digestive','isDiag2Diabetes',
+            'isDiag2Injury','isDiag2Musculoskeletal','isDiag2Genitourinary','isDiag2Neoplasms',
+            'isDiag2Other']
+
+
 def getHeaders():
     header = []
     header.append('encounter_id')
@@ -212,7 +198,7 @@ def getHeaders():
     header.extend(['isMale', 'isFemale', 'isUnknown'])
     header.extend(['is0', 'is10', 'is20', 'is30', 'is40', 'is50', 'is60', 'is70', 'is80', 'is90'])
     header.append('weight')
-    header.extend(['isEmergency','isUrgent','isElective','isNewborn','isNot Available','isNULL','isTrauma Center','isNot Mapped'])
+    header.extend(['isEmergency','isUrgent','isElective','isNewborn','isNot Available','isNULL','isTrauma Center','isNot Mapped', 'None'])
     header.append(getFlattenedDischargeDispositionIdColumnNames())
     header.append(getFlattenedAdmissionTypeIdColumnNames())
     header.append('time_in_hospital')
@@ -223,9 +209,9 @@ def getHeaders():
     header.append('number_outpatient')
     header.append('number_emergency')
     header.append('number_inpatient')
-    header.append('diag_1') ##TODO : add flattened columns
-    header.append('diag_2') ##TODO : add flattened columns
-    header.append('diag_3') ##TODO : add flattened columns
+    header.append(getFlattenedDiag1Columns())
+    header.append(getFlattenedDiag2Columns())
+    header.append(getFlattenedDiag3Columns())
     header.append('number_diagnoses')
     header.extend(['is>200', 'is>300', 'isNormal', 'isNone'])
     header.append('A1Cresult')
@@ -255,17 +241,25 @@ def getHeaders():
     header.append('change')
     header.append('diabetesMed')
     header.append('readmitted')
+    return header
 
+def writeToFile(allFlattenedRows):
+    df = pd.DataFrame(allFlattenedRows)
+    df.to_csv('flattened.csv', index=False, header=False)
 
 def flatten_csv(filePath):
     df = pd.read_csv(filePath, sep=',',header=0)
-    flattenedRow = []
+    allFlattenedRows = []
+    allFlattenedRows.append(getHeaders())
+    print(getHeaders())
+    return
     for index, dataRow in df.iterrows():
+        flattenedRow = []
         flattenedRow.append(dataRow['encounter_id'])
         flattenedRow.append(dataRow['patient_nbr'])
         flattenedRow.extend(getFlattenedRace(dataRow['race']))
         flattenedRow.extend(getFlattenedGender(dataRow['gender']))
-        flattenedRow.extend(getFlattenedAge(dataRow['age'])
+        flattenedRow.extend(getFlattenedAge(dataRow['age']))
         flattenedRow.extend(getFlattenedAdmissionTypeId(dataRow['admission_type_id']))
         flattenedRow.extend(getFlattenedDischargeDispositionId(dataRow['discharge_disposition_id']))
         flattenedRow.extend(getFlattenedAdmissionSourceId(dataRow['admission_source_id']))
@@ -310,6 +304,10 @@ def flatten_csv(filePath):
         flattenedRow.append(dataRow['diabetesMed'])
         flattenedRow.append(dataRow['readmitted'])
 
-        break
+        allFlattenedRows.append(flattenedRow)
+
+        if(len(allFlattenedRows) == 10000):
+            writeToFile(allFlattenedRows)
+            allFlattenedRows = []
 
 flatten_csv('./diabetic_data.csv')
