@@ -286,7 +286,7 @@ def flatten_csv(filePath):
         flattenedRow.extend(getFlattenedDiag1(dataRow['diag_3']))
         flattenedRow.append(dataRow['number_diagnoses'])
         flattenedRow.extend(getFlattenedGlucoseSerum(dataRow['max_glu_serum']))
-        flattenedRow.append('0' if dataRow['A1Cresult'] == 'none' else '1')
+        flattenedRow.append('0' if dataRow['A1Cresult'] == 'None' else '1')
         flattenedRow.append('0' if dataRow['metformin'] == 'No' else '1')
         flattenedRow.append('0' if dataRow['repaglinide'] == 'No' else '1')
         flattenedRow.append('0' if dataRow['nateglinide'] == 'No' else '1')
@@ -320,5 +320,8 @@ def flatten_csv(filePath):
         if(len(allFlattenedRows) == 10000):
             writeToFile(allFlattenedRows)
             allFlattenedRows = []
+    writeToFile(allFlattenedRows)
+        
 
 flatten_csv('./diabetic_data.csv')
+
