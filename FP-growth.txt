@@ -31,6 +31,15 @@ FPGrowth found 2 rules
 
 
 Explanation:
-Metformin is a medicine that can improve insulin sensitivity. This medicine is used alone or combined with insulin to to treat type 2 diabetes (see http://www.diabeticlivingonline.com/medication/oral/metformin-improving-insulin-sensitivity). Using FP-growth, we identified one association rule that patient taking metformin usually also takes insulin (confidence = 0.5). This is consistent with the fact that combination of metformin with insulin can enhance the effect of glycemic control while reduing the dosage requirement for insulin (see Michiel G. Wulffelé, MD et al, Combination of Insulin and Metformin in the Treatment of Type 2 Diabetes. https://doi.org/10.2337/diacare.25.12.2133). 
+Metformin is a medicine that can improve insulin sensitivity. 
+This medicine is used alone or combined with insulin to to treat type 2 diabetes 
+(see http://www.diabeticlivingonline.com/medication/oral/metformin-improving-insulin-sensitivity). 
+Using FP-growth, we identified one association rule that patient taking metformin usually also takes insulin (confidence = 0.5). 
+This is consistent with the fact that combination of metformin with insulin can enhance the effect of glycemic control while reduing the dosage requirement for insulin
+ (see Michiel G. Wulffelé, MD et al, Combination of Insulin and Metformin in the Treatment of Type 2 Diabetes. https://doi.org/10.2337/diacare.25.12.2133). 
 
-We also found another association rule: insulin => metformin (confidence = 0.18). This is because insulin is a widely used medicine for both type 1 and type 2 diabetes. For type 1 diabetes, patients cannot produce insulin, thus taking insulin is neccessary. However, they may not need metformin, as long as their body is sensitive to insulin. For type 2 diabetes patients who have developed insulin-resistency, it is usually the first choice to take metformin to increase insulin sensitivity.
+We also found another association rule: insulin => metformin (confidence = 0.18). 
+This is because insulin is a widely used medicine for both type 1 and type 2 diabetes. 
+For type 1 diabetes, patients cannot produce insulin, thus taking insulin is neccessary. 
+However, they may not need metformin, as long as their body is sensitive to insulin. 
+For type 2 diabetes patients who have developed insulin-resistency, it is usually the first choice to take metformin to increase insulin sensitivity.
