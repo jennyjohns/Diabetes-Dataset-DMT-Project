@@ -323,5 +323,5 @@ def flatten_csv(filePath):
     writeToFile(allFlattenedRows)
         
 
-flatten_csv('./diabetic_data.csv')
+flatten_csv('../Dataset/diabetic_data.csv')
 
